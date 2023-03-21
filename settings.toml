@@ -1,0 +1,25 @@
+[api.urls]
+
+login = 'https://api.invertironline.com/token'
+operaciones = 'https://api.invertironline.com/api/v2/operaciones'
+
+
+[api.dataframe]
+
+operaciones_colunms = [
+    'numero',
+    'fecha_orden',
+    'tipo',
+    'estado',
+    'mercado',
+    'simbolo',
+    'cantidad',
+    'monto',
+    'modalidad',
+    'precio',
+    'fecha_operacion',
+    'cantidad_operacion',
+    'precio_operacion',
+    'monto_operacion',
+    'plazo',
+]
