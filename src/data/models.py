@@ -1,11 +1,11 @@
 from typing import Union
-from datetime import date, datetime, timezone
+from datetime import datetime, timezone
 from pydantic import BaseModel, validator
 
 
 class Order(BaseModel):
     numero: int
-    fechaOrden: Union[str, date]
+    fechaOrden: Union[str, datetime]
     tipo: str
     estado: str
     mercado: str
@@ -14,7 +14,7 @@ class Order(BaseModel):
     monto: float
     modalidad: str
     precio: float
-    fechaOperada: Union[str, date]
+    fechaOperada: Union[str, datetime]
     cantidadOperada: float
     precioOperado: float
     montoOperado: float
@@ -31,12 +31,12 @@ class Order(BaseModel):
     def validate_fecha(cls, fecha):
         if isinstance(fecha, str):
             try:
-                fecha = datetime.fromisoformat(fecha).replace(tzinfo=timezone.utc).date()
+                fecha = datetime.fromisoformat(fecha).replace(tzinfo=timezone.utc)
             except ValueError:
-                fecha = datetime.strptime(fecha, "%Y-%m-%dT%H:%M:%S.%f").date()
-        elif not isinstance(fecha, date):
+                fecha = datetime.strptime(fecha, "%Y-%m-%dT%H:%M:%S.%f")
+        elif not isinstance(fecha, datetime):
             raise ValueError(
-                "La fecha debe ser una cadena en formato ISO o un objeto date."
+                "La fecha debe ser una cadena en formato ISO o un objeto datetime."
             )
         return fecha
 
