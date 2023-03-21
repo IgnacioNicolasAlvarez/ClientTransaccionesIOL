@@ -2,3 +2,6 @@
 # Ignore dynaconf secret files
 .secrets.*
 __pycache__
+logs
+*.db
+*.db.wal
