@@ -8,26 +8,20 @@ To use this application, you will need a valid username and password for the IOL
 
 Once you have an access token, you can clone this repository to your local machine:
 
-'''bash
-git clone <https://github.com/ignacioNicolasAlvarez/iol-api-project.git>
-'''
+> git clone <https://github.com/ignacioNicolasAlvarez/> HistoriaTransaccionesIOL.git
 
 Next, create a virtual environment for the project and install the required dependencies:
 
-'''bash
-cd iol-api-project
-python -m venv venv
-source venv/bin/activate
-pip install -r requirements.txt
-'''
+> cd iol-api-project
+> python -m venv venv
+> source venv/bin/activate
+> pip install -r requirements.txt
 
 Then, create a .secrets.toml file in the root directory of the project with the following contents:
 
-'''bash
-[iol.credentials]
-username = "yourusername"
-password = "yourpassword"
-'''
+> [iol.credentials]
+> username = "yourusername"
+> password = "yourpassword"
 
 Replace the values yourusername and yourpassword with your actual IOL Invertironline API credentials.
 
@@ -37,9 +31,7 @@ The main functionality of this application is to retrieve a list of completed fi
 
 To run the application, execute the following command:
 
-'''bash
-python main.py
-'''
+> python main.py
 
 ## Contributing
 
