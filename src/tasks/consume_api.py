@@ -14,7 +14,13 @@ def task_consume_api() -> list:
     )
 
     if token:
-        operaciones_raw = get_operaciones(fecha_desde="2021-01-01", token=token)
+        database = OrderRepository.get_instance(db_file="order.db")
+        last_fechaOrden = database.get_last_date()
+
+        if last_fechaOrden:
+            operaciones_raw = get_operaciones(fecha_desde=last_fechaOrden, token=token)
+        else:
+            operaciones_raw = get_operaciones(fecha_desde="2021-01-01 00:00:00", token=token)
 
     else:
         logger.info("Login failed")
@@ -25,7 +31,7 @@ def task_consume_api() -> list:
 def task_transform(raw: list):
     orders = [Order(**item) for item in raw if item["tipo"] in ["Compra", "Venta"]]
 
-    database = OrderRepository(db_file="order.db")
+    database = OrderRepository.get_instance(db_file="order.db")
 
     for order in orders:
         if order.tipo in ["Compra", "Venta"]:

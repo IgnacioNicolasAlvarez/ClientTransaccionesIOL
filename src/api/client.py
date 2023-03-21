@@ -15,13 +15,13 @@ def get_operaciones(token, estado="terminadas", fecha_desde=None, fecha_hasta=No
     headers = {"Authorization": f"{token}"}
 
     if not fecha_hasta:
-        fecha_hasta = FechaPydantic(fecha=datetime.today().strftime("%Y-%m-%d"))
+        fecha_hasta = FechaPydantic(fecha=datetime.today())
 
     if not fecha_desde:
         fecha_desde = FechaPydantic(
             fecha=(
                 date.today() - timedelta(days=1 if es_dia_habil(date.today()) else 3)
-            ).strftime("%Y-%m-%d")
+            )
         )
     elif isinstance(fecha_desde, FechaPydantic):
         fecha_desde = fecha_desde

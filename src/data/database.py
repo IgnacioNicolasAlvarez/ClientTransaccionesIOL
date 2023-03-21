@@ -4,10 +4,18 @@ from src.data.models import Order
 
 
 class OrderRepository:
+    instance = None
+
+    @staticmethod
+    def get_instance(db_file: str) -> "OrderRepository":
+        if not OrderRepository.instance:
+            OrderRepository.instance = OrderRepository(db_file)
+        return OrderRepository.instance
+    
     def __init__(self, db_file: str):
         self.conn = duckdb.connect(db_file)
         self.conn.execute(
-            "CREATE TABLE IF NOT EXISTS orders (numero INTEGER, fechaOrden DATE, tipo TEXT, estado TEXT, mercado TEXT, simbolo TEXT, cantidad FLOAT, monto FLOAT, modalidad TEXT, precio FLOAT, fechaOperada DATE, cantidadOperada FLOAT, precioOperado FLOAT, montoOperado FLOAT, plazo TEXT)"
+            "CREATE TABLE IF NOT EXISTS orders (numero INTEGER, fechaOrden DATETIME, tipo TEXT, estado TEXT, mercado TEXT, simbolo TEXT, cantidad FLOAT, monto FLOAT, modalidad TEXT, precio FLOAT, fechaOperada DATETIME, cantidadOperada FLOAT, precioOperado FLOAT, montoOperado FLOAT, plazo TEXT)"
         )
 
     def create(self, order: Order) -> int:
@@ -31,3 +39,12 @@ class OrderRepository:
         rows = result.fetchall()
         orders = [Order(*row) for row in rows]
         return orders
+
+    def get_last_date(self) -> str:
+        query = "SELECT fechaOrden FROM orders ORDER BY fechaOrden DESC LIMIT 1"
+        result = self.conn.execute(query)
+        row = result.fetchone()
+        if row:
+            return row[0]
+        else:
+            return None
