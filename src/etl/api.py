@@ -1,11 +1,14 @@
+from prefect import task
+
 from config import settings
+from src import logger
 from src.api.auth import login
 from src.api.client import get_operaciones
-from src import logger
-from src.data.models import Order
 from src.data.database import OrderRepository
+from src.data.models import Order
 
 
+@task(retries=2, retry_delay_seconds=60)
 def task_consume_api() -> list:
     token = login(
         password=settings.iol.credentials.password,
@@ -14,13 +17,15 @@ def task_consume_api() -> list:
     )
 
     if token:
-        database = OrderRepository.get_instance(db_file="order.db")
+        database = OrderRepository.get_instance()
         last_fechaOrden = database.get_last_date()
 
         if last_fechaOrden:
             operaciones_raw = get_operaciones(fecha_desde=last_fechaOrden, token=token)
         else:
-            operaciones_raw = get_operaciones(fecha_desde="2021-01-01 00:00:00", token=token)
+            operaciones_raw = get_operaciones(
+                fecha_desde="2021-01-01 00:00:00", token=token
+            )
 
     else:
         logger.info("Login failed")
@@ -28,11 +33,16 @@ def task_consume_api() -> list:
     return operaciones_raw
 
 
-def task_transform(raw: list):
+@task
+def task_transform(raw: list) -> list:
     orders = [Order(**item) for item in raw if item["tipo"] in ["Compra", "Venta"]]
+    return orders
 
-    database = OrderRepository.get_instance(db_file="order.db")
 
+@task
+def task_load(orders: list) -> None:
+    database = OrderRepository.get_instance()
+    database.delete_last_loaded_orders()
+    
     for order in orders:
-        if order.tipo in ["Compra", "Venta"]:
-            database.create(order)
+        database.create(order)
