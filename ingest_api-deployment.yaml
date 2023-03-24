@@ -1,0 +1,43 @@
+###
+### A complete description of a Prefect Deployment for flow 'ingest-api'
+###
+name: etl
+description: null
+version: 04dbf799f874c2e00ade20baed1dfc51
+# The work queue that will handle this deployment's runs
+work_queue_name: default
+work_pool_name: null
+tags: []
+parameters: {}
+schedule:
+  cron: 0 18 * * 1-5
+  timezone: null
+  day_or: true
+is_schedule_active: null
+infra_overrides: {}
+infrastructure:
+  type: process
+  env: {}
+  labels: {}
+  name: null
+  command: null
+  stream_output: true
+  working_dir: null
+  block_type_slug: process
+  _block_type_slug: process
+
+###
+### DO NOT EDIT BELOW THIS LINE
+###
+flow_name: ingest-api
+manifest_path: null
+storage: null
+path: /app
+entrypoint: main.py:ingest_api
+parameter_openapi_schema:
+  title: Parameters
+  type: object
+  properties: {}
+  required: null
+  definitions: null
+timestamp: '2023-03-24T00:16:30.697907+00:00'

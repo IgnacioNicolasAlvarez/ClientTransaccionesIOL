@@ -24,7 +24,7 @@ def task_consume_api() -> list:
             operaciones_raw = get_operaciones(fecha_desde=last_fechaOrden, token=token)
         else:
             operaciones_raw = get_operaciones(
-                fecha_desde="2021-01-01 00:00:00", token=token
+                fecha_desde=settings.execution.start_date, token=token
             )
 
     else:
@@ -35,7 +35,7 @@ def task_consume_api() -> list:
 
 @task
 def task_transform(raw: list) -> list:
-    orders = [Order(**item) for item in raw if item["tipo"] in ["Compra", "Venta"]]
+    orders = [Order(**item) for item in raw]
     return orders
 
 
@@ -43,6 +43,6 @@ def task_transform(raw: list) -> list:
 def task_load(orders: list) -> None:
     database = OrderRepository.get_instance()
     database.delete_last_loaded_orders()
-    
+
     for order in orders:
         database.create(order)

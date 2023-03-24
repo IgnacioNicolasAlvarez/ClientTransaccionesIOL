@@ -1,7 +1,9 @@
-import psycopg2
 from typing import List
-from src.data.models import Order
 
+import psycopg2
+
+from config import settings
+from src.data.models import Order
 
 
 class OrderRepository:
@@ -15,10 +17,10 @@ class OrderRepository:
 
     def __init__(self):
         self.conn = psycopg2.connect(
-            host="localhost",
-            database="postgres",
-            user="postgres",
-            password="mysecretpassword",
+            host=settings.db.credentials.POSTGRES_HOST,
+            database=settings.db.credentials.POSTGRES_DB,
+            user=settings.db.credentials.POSTGRES_USER,
+            password=settings.db.credentials.POSTGRES_PASSWORD,
         )
         self.cur = self.conn.cursor()
         self.cur.execute(
