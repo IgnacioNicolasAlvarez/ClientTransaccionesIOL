@@ -23,3 +23,7 @@ operaciones_colunms = [
     'monto_operacion',
     'plazo',
 ]
+
+[execution]
+
+start_date = '2021-01-01 00:00:00'

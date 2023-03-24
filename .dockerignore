@@ -1,0 +1,4 @@
+__pycache__
+.venv
+logs
+run_etl.sh

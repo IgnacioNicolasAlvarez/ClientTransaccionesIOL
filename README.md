@@ -1,42 +1,59 @@
-# IOL Invertironline API Project
+# Historia de Transacciones IOL
 
-This project is a Python application that consumes the IOL Invertironline REST API. The IOL Invertironline API provides access to financial market data and allows users to perform financial transactions in the Argentine market.
+## Requisitos previos
 
-## Getting Started
+- Docker
+- Docker Composer
 
-To use this application, you will need a valid username and password for the IOL Invertironline platform. You will also need to obtain an access token from the API by following the instructions on the IOL Invertironline developer portal.
+## Configuración
 
-Once you have an access token, you can clone this repository to your local machine:
+Crea un archivo llamado .secrets.toml en el directorio principal del repositorio con tus propias credenciales y configuraciones:
 
-> git clone <https://github.com/ignacioNicolasAlvarez/> HistoriaTransaccionesIOL.git
+```toml
+[iol.credentials]
 
-Next, create a virtual environment for the project and install the required dependencies:
+username = "tu_nombre_de_usuario"
+password = "tu_contraseña"
 
-> cd iol-api-project
-> python -m venv venv
-> source venv/bin/activate
-> pip install -r requirements.txt
+[db.credentials]
+POSTGRES_USER="usuario_postgres"
+POSTGRES_PASSWORD="contraseña_postgres"
+POSTGRES_DB="nombre_base_de_datos"
+POSTGRES_HOST="db"
+POSTGRES_PORT="5432"
+```
 
-Then, create a .secrets.toml file in the root directory of the project with the following contents:
+Asegúrate de reemplazar los valores con tus propias credenciales y configuraciones.
 
-> [iol.credentials]
-> username = "yourusername"
-> password = "yourpassword"
+## Construir e iniciar los servicios
 
-Replace the values yourusername and yourpassword with your actual IOL Invertironline API credentials.
+Para construir e iniciar los servicios definidos en el archivo docker-compose.yml, utiliza los siguientes comandos:
 
-## Usage
+```bash
+make build
+make up
+```
 
-The main functionality of this application is to retrieve a list of completed financial transactions (operaciones) from the IOL Invertironline API. You can customize the date range of the transactions using the fecha_desde and fecha_hasta parameters.
+Esto construirá las imágenes de Docker y ejecutará la base de datos PostgreSQL y otros servicios definidos en el archivo docker-compose.yml.
 
-To run the application, execute the following command:
+## Ejecutar el servicio Python a demanda
 
-> python main.py
+Para ejecutar el servicio etl a demanda (sin iniciarlo automáticamente al iniciar Docker Compose), ejecuta el siguiente comando:
 
-## Contributing
+```bash
+make run-etl
+```
 
-If you would like to contribute to this project, feel free to submit a pull request. Before doing so, please make sure that your code follows the PEP 8 style guide and includes appropriate tests.
+## Detener los servicios
 
-## License
+Para detener y eliminar los servicios definidos en el archivo docker-compose.yml, ejecuta el siguiente comando:
 
-This project is licensed under the MIT License. See the LICENSE file for more details.
+```bash
+make down
+```
+
+Esto detendrá y eliminará todos los servicios en ejecución.
+
+## Licencia
+
+Este proyecto está licenciado bajo la licencia MIT - consulta el archivo LICENSE para obtener más detalles.

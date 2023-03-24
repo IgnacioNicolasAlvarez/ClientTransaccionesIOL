@@ -1,5 +1,6 @@
-from typing import Union
 from datetime import datetime, timezone
+from typing import Union
+
 from pydantic import BaseModel, validator
 
 
@@ -26,7 +27,6 @@ class Order(BaseModel):
             raise ValueError("El número debe ser un entero.")
         return numero
 
-
     @validator("fechaOrden", "fechaOperada")
     def validate_fecha(cls, fecha):
         if isinstance(fecha, str):
@@ -39,12 +39,6 @@ class Order(BaseModel):
                 "La fecha debe ser una cadena en formato ISO o un objeto datetime."
             )
         return fecha
-
-    @validator("tipo")
-    def validate_tipo(cls, tipo):
-        if tipo not in ["Compra", "Venta"]:
-            raise ValueError("El tipo debe ser 'Compra' o 'Venta'.")
-        return tipo
 
     @validator("estado")
     def validate_estado(cls, estado):
@@ -60,19 +54,16 @@ class Order(BaseModel):
             raise ValueError("Este campo es obligatorio.")
         return value
 
-    @validator("cantidad", "cantidadOperada", pre=True)
+    @validator(
+        "cantidad",
+        "cantidadOperada",
+        "monto",
+        "montoOperado",
+        "precio",
+        "precioOperado",
+        pre=True,
+    )
     def parse_float(cls, value):
-        return float(value)
-
-    @validator("monto", "montoOperado", pre=True)
-    def parse_float_or_none(cls, value):
-        if value is not None:
-            return float(value)
-        else:
-            return None
-
-    @validator("precio", "precioOperado", pre=True)
-    def parse_float_or_zero(cls, value):
         if value is None:
             return 0.0
         else:

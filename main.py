@@ -1,5 +1,4 @@
-from src.tasks.consume_api import task_consume_api, task_transform
+from src.etl.flow import ingest_api
 
 if __name__ == "__main__":
-    raw = task_consume_api()
-    task_transform(raw=raw)
+    ingest_api()
