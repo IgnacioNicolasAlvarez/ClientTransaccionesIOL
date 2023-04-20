@@ -2,8 +2,11 @@ from typing import List
 
 import psycopg2
 
-from config import settings
 from src.data.models import Order
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
 
 
 class OrderRepository:
@@ -17,10 +20,10 @@ class OrderRepository:
 
     def __init__(self):
         self.conn = psycopg2.connect(
-            host=settings.db.credentials.POSTGRES_HOST,
-            database=settings.db.credentials.POSTGRES_DB,
-            user=settings.db.credentials.POSTGRES_USER,
-            password=settings.db.credentials.POSTGRES_PASSWORD,
+            host=os.getenv("POSTGRES_HOST"),
+            database=os.getenv("POSTGRES_DB"),
+            user=os.getenv("POSTGRES_USER"),
+            password=os.getenv("POSTGRES_PASSWORD"),
         )
         self.cur = self.conn.cursor()
         self.cur.execute(
@@ -28,7 +31,7 @@ class OrderRepository:
         )
 
     def create(self, order: Order) -> int:
-        query = f"INSERT INTO orders (numero, fechaOrden, tipo, estado, mercado, simbolo, cantidad, monto, modalidad, precio, fechaOperada, cantidadOperada, precioOperado, montoOperado, plazo) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+        query = "INSERT INTO orders (numero, fechaOrden, tipo, estado, mercado, simbolo, cantidad, monto, modalidad, precio, fechaOperada, cantidadOperada, precioOperado, montoOperado, plazo) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
         values = (
             order.numero,
             order.fechaOrden,
@@ -67,7 +70,8 @@ class OrderRepository:
         return orders
 
     def get_last_date(self) -> str:
-        query = "SELECT fechaOrden FROM orders ORDER BY fechaOrden DESC LIMIT 1"
+        query = """SELECT fechaOrden FROM orders
+        ORDER BY fechaOrden DESC LIMIT 1"""
         self.cur.execute(query)
         row = self.cur.fetchone()
         if row:

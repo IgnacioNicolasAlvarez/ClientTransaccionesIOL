@@ -1,10 +1,12 @@
 from datetime import date, datetime, timedelta
-from src import logger
+
 import requests
 
 from config import settings
-from .models import FechaPydantic
+
 from src.utils.date import es_dia_habil
+
+from .models import FechaPydantic
 
 
 def get_operaciones(token, estado="terminadas", fecha_desde=None, fecha_hasta=None):
@@ -18,11 +20,8 @@ def get_operaciones(token, estado="terminadas", fecha_desde=None, fecha_hasta=No
         fecha_hasta = FechaPydantic(fecha=datetime.today())
 
     if not fecha_desde:
-        fecha_desde = FechaPydantic(
-            fecha=(
-                date.today() - timedelta(days=1 if es_dia_habil(date.today()) else 3)
-            )
-        )
+        delta = timedelta(days=1 if es_dia_habil(date.today()) else 3)
+        fecha_desde = FechaPydantic(fecha=(date.today() - delta))
     elif isinstance(fecha_desde, FechaPydantic):
         fecha_desde = fecha_desde
     else:

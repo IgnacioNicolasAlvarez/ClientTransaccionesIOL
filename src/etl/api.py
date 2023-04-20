@@ -1,7 +1,8 @@
+import logging
+
 from prefect import task
 
 from config import settings
-from src import logger
 from src.api.auth import login
 from src.api.client import get_operaciones
 from src.data.database import OrderRepository
@@ -15,7 +16,7 @@ def task_consume_api() -> list:
         username=settings.iol.credentials.username,
         url=settings.api.urls.login,
     )
-
+    logging.info(token)
     if token:
         database = OrderRepository.get_instance()
         last_fechaOrden = database.get_last_date()
@@ -28,7 +29,7 @@ def task_consume_api() -> list:
             )
 
     else:
-        logger.info("Login failed")
+        logging.info("Login failed")
 
     return operaciones_raw
 

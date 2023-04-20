@@ -1,6 +1,7 @@
 from prefect import flow
-from src.etl.api import task_consume_api, task_transform, task_load
 from prefect.task_runners import SequentialTaskRunner
+
+from src.etl.api import task_consume_api, task_load, task_transform
 
 
 @flow(task_runner=SequentialTaskRunner())

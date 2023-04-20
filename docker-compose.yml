@@ -13,7 +13,7 @@ services:
       - db
 
   db:
-    image: arm32v7/postgres:13
+    image: postgres:13
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}

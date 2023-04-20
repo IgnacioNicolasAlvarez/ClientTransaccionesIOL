@@ -11,8 +11,8 @@ def login(username: str, password: str, url: str) -> str:
 
     response = requests.post(url, data=credentials, headers=headers)
     if response.status_code == 200:
-        response_json = response.json()
-        token = f"{response_json['token_type']} {response_json['access_token']}"
+        out_json = response.json()
+        token = f"{out_json['token_type']} {out_json['access_token']}"
         return token
     else:
         return None
